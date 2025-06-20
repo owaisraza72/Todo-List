@@ -1,0 +1,69 @@
+                    <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <input type="text" id="text">
+        <button id="add">Add</button>
+        <button id="clear">clear</button>
+    <p id="show"></p>
+
+    <script>
+
+
+
+              let text = document.getElementById('text')
+              let add = document.getElementById('add')
+              let clear = document.getElementById('clear')
+
+              let data = []||JSON.parse(localStorage.getItem('data'))
+
+              add.addEventListener('click', function () {
+                  data.push(text.value);
+                  console.log(data)
+                  // show.innerHTML+=`data`;
+                  
+                  localStorage.setItem('data',JSON.stringify(data));
+                  
+                  render()
+
+                        })
+
+
+             function render(){
+
+              for (let i = 0; i < data.length; i++) {console.log(data[i]);
+   show.innerHTML += `<li>${data[i]} <button onclick="edit(${i})">Edit</button> <button onclick="del(${i})">delete
+   </button> </li>`;
+   
+              }     
+              // window.location.reload("index.html")
+              
+              text.value = ""
+
+              }   
+
+              function edit(){
+              
+              }
+
+              
+            function del(index){
+                    // show.innerHMTL = "";
+                    localStorage.removeItem('data')
+            
+            }
+
+                    
+
+              clear.addEventListener('click', function () {
+                  localStorage.clear('data');
+                  show.innerHTML = "";
+              })
+     </script>
+  </body>
+</html>
