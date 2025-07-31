@@ -8,68 +8,146 @@ let show = document.getElementById("show");
 let clear = document.getElementById("clear");
 let textInput = document.getElementById("text");
 let addbtn = document.getElementById("add");
+let updatebtn = document.getElementById("updatebtn");
 
-addbtn.addEventListener("click", async () => {
+async function addTodo() {
+  if (!textInput.value.trim()) {
+    Swal.fire("Input Required", "Please enter a todo!", "warning");
+    return;
+  }
   const { error } = await client
     .from("todo_list")
-    .insert({ addTask: textInput.value });
+    .insert({ todo_text: textInput.value });
 
   if (error) {
     console.log(error.message);
+    Swal.fire("Error", "Failed to add todo", "error");
+    return;
   }
 
+  Swal.fire("Success", "Todo added!", "success");
+  textInput.value = "";
   show.innerHTML = "";
-});async function render() {
+  showData();
+}
+
+textInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    // addbtn.addEventListener("click", async () => {
+    if (!textInput.value.trim()) {
+      Swal.fire("Input Required", "Please enter a todo!", "warning");
+      return;
+    }
+    addTodo();
+  }
+});
+
+async function showData() {
   show.innerHTML = "";
 
   const { data, error } = await client.from("todo_list").select("*");
 
   if (error) {
     console.error(error.message);
-    return []; // ✅ safe fallback
+    Swal.fire("Error", "Could not fetch todos", "error");
+    return;
   }
 
-  for (let i = 0; i < data.length; i++) {
+  data.forEach((element) => {
     show.innerHTML += `<li><div>
-      ${data[i].addTask}
-      <button onclick="editValue(${i})">Edit</button>
-      <button onclick="del(${i})">Delete</button>
+      ${element.todo_text}
+      <button onclick="editValue(${element.id})">Edit</button>
+      <button onclick="del(${element.id})">Delete</button>
     </div></li>`;
-  }
-
-  return data; // ✅ so editValue() can use it
+  });
 }
+showData();
 
+let currentEditId = null;
 
-async function editValue(index) {
-  render(); // ✅ ab data mil gaya
-  console.log("ok");
-
-  const task = data[index];
-  textInput.value = task.addTask;
-
-  // data.splice(index, 1, add);
-  show.innerHTML = "";
-  const { error } = await client
+async function editValue(todo_id) {
+  const { data, error } = await client
     .from("todo_list")
-    .update({ addTask: textInput })
-    .eq("id", 1);
+    .select("todo_text")
+    .eq("id", todo_id)
+    .single();
 
   if (error) {
     console.log(error.message);
+    Swal.fire("Error", "Could not load todo", "error");
+    return;
   }
-  render();
+
+  textInput.value = data.todo_text;
+  currentEditId = todo_id;
+  addbtn.style.display = "none";
+  updatebtn.style.display = "inline-block";
 }
 
-function del(index) {
-  alert("ok");
-  //   data.splice(index, 1);
-  //   alert("Your data is Deleted");
-  //   localStorage.removeItem("data", data[index]);
-  //   render();
+updatebtn.addEventListener("click", async () => {
+  if (!currentEditId) return;
+
+  const { error } = await client
+    .from("todo_list")
+    .update({ todo_text: textInput.value })
+    .eq("id", currentEditId);
+
+  if (error) {
+    console.log(error.message);
+    Swal.fire("Error", "Update failed", "error");
+    return;
+  }
+
+  Swal.fire("Updated", "Todo updated!", "success");
+  textInput.value = "";
+  currentEditId = null;
+  showData();
+  updatebtn.style.display = "none";
+  addbtn.style.display = "inline-block";
+});
+
+async function del(todo_id) {
+  const confirm = await Swal.fire({
+    title: "Are you sure?",
+    text: "This will delete the todo!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  const { error } = await client.from("todo_list").delete().eq("id", todo_id);
+
+  if (error) {
+    console.log(error.message);
+    Swal.fire("Error", "Could not delete", "error");
+    return;
+  }
+
+  Swal.fire("Deleted!", "Todo deleted", "success");
+  showData();
 }
 
-// clear.addEventListener("click", function () {
-//   localStorage.clear("data");
-//   show.innerHTML = "";
-// });
+clear.addEventListener("click", async () => {
+  const confirm = await Swal.fire({
+    title: "Clear All?",
+    text: "This will delete all todos!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, clear all!",
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  const { error } = await client.from("todo_list").delete().neq("id", 0); // delete all
+
+  if (error) {
+    console.log(error.message);
+    Swal.fire("Error", "Failed to clear all", "error");
+    return;
+  }
+
+  Swal.fire("Cleared", "All todos deleted!", "success");
+  showData();
+});

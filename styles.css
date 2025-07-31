@@ -1,70 +1,199 @@
-#body {
-  background-color: white;
+/* /* General Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-input {
-  width: 90%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  border: none;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  background-color: #ccc;
+body {
+  background-color: #f5f7fa;
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
 }
 
 #form {
-  margin: 2% 35% 0%;
-  background-color: f9f9f9;
-  padding: 20px 30px 10px;
-  border-radius: 20px;
-  box-shadow: 13px 13px 35px #ccc;
-  font-weight: bold;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  margin: 10px 0px;
+  text-align: center;
+  color: #4a6fa5;
+  margin-bottom: 25px;
+  font-size: 2.2rem;
+}
+
+/* Input and Button Styles */
+input[type="text"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e1e5ee;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  transition: border 0.3s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #4a6fa5;
 }
 
 .btn1,
 .btn2 {
-  width: 23%;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 10px;
-  border-radius: 10px;
+  padding: 10px 20px;
   border: none;
-  background-color: #ccc;
-  height: 40px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+  margin-right: 10px;
 }
-li {
-  margin: 0 auto 1%;
-  list-style: none;
 
-  width: 28%;
-  background-color: f9f9f9;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 13px 13px 35px #ccc;
-  font-weight: bold;
-  font-size: 22px;
+.btn1 {
+  background-color: #4a6fa5;
+  color: white;
+}
+
+.btn1:hover {
+  background-color: #3a5a80;
+  transform: translateY(-2px);
+}
+
+.btn2 {
+  background-color: #f05454;
+  color: white;
+}
+
+.btn2:hover {
+  background-color: #d14343;
+  transform: translateY(-2px);
+}
+
+/* Todo List Styles */
+#show {
+  max-width: 600px;
+  margin: 0 auto;
+  list-style: none;
+}
+
+#show li {
+  background: white;
+  margin-bottom: 12px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+#show li:hover {
+  transform: translateY(-3px);
+}
+
+#show li div {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  gap: 10px;
+  width: 100%;
 }
 
-li button {
-  width: 90px;
-  padding: 10px;
-  text-align: center;
-  margin-bottom: 0px;
-  border-radius: 10px;
+#show li button {
+  padding: 6px 12px;
   border: none;
-  background-color: #ccc;
-  height: 42px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+#show li button:first-of-type {
+  background-color: #ffc107;
+  color: #333;
+  margin-left: auto;
+}
+
+#show li button:first-of-type:hover {
+  background-color: #e0a800;
+}
+
+#show li button:last-of-type {
+  background-color: #dc3545;
+  color: white;
+}
+
+#show li button:last-of-type:hover {
+  background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  #form {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .btn1,
+  .btn2 {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  #show li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #show li div {
+    flex-wrap: wrap;
+  }
+
+  #show li button {
+    width: 100%;
+  }
+}
+
+/* ... (previous CSS remains the same until the button styles) ... */
+
+#show li button:first-of-type {
+  background-color: #ffc107;
+  color: #333;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#show li button:first-of-type:hover {
+  background-color: #e0a800;
+}
+
+#show li button:last-of-type {
+  background-color: #dc3545;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#show li button:last-of-type:hover {
+  background-color: #c82333;
+}
+
+/* Add emoji styling */
+.button-emoji {
+  font-size: 1.1em;
 }
